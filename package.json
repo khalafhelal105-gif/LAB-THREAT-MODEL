@@ -1,0 +1,10 @@
+{
+  "name": "internalflow-lab",
+  "version": "1.0.0",
+  "description": "CYSE 411 lab: InternalFlow expense approval portal (intentionally vulnerable prototype for educational use)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}

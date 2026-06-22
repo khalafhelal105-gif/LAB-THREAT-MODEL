@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InternalFlow — Expense Approval Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; color: #222; }
+    h1 { color: #275D38; }
+    input, select, button { font-size: 14px; padding: 6px; margin: 4px 0; }
+    button { background: #275D38; color: white; border: none; padding: 8px 14px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; font-size: 14px; }
+    th { background: #E9F2EC; }
+    #managerConsole { display: none; margin-top: 30px; border-top: 2px solid #275D38; padding-top: 14px; }
+    .pill { padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+    .Pending { background: #FFF2CC; }
+    .Approved { background: #E2EFDA; }
+    .Rejected { background: #FFC7CE; }
+    #status { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>InternalFlow</h1>
+  <p id="status">Not logged in.</p>
+
+  <div id="loginBox">
+    <h3>Log in</h3>
+    <input id="username" placeholder="username (try: alice / bob / carla)" /><br/>
+    <input id="password" type="password" placeholder="password" /><br/>
+    <button onclick="login()">Log In</button>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <h3>My Expense Requests</h3>
+    <table id="myRequestsTable"><thead><tr><th>ID</th><th>Amount</th><th>Category</th><th>Description</th><th>Status</th></tr></thead><tbody></tbody></table>
+
+    <h3>Submit a new request</h3>
+    <input id="amount" placeholder="Amount" /><br/>
+    <input id="category" placeholder="Category" /><br/>
+    <input id="description" placeholder="Description" /><br/>
+    <button onclick="submitRequest()">Submit</button>
+
+    <button onclick="logout()" style="background:#9c0006; margin-top:20px;">Log out</button>
+  </div>
+
+  <div id="managerConsole">
+    <h3>Manager Console — Team Pending Requests</h3>
+    <table id="pendingTable"><thead><tr><th>ID</th><th>Owner</th><th>Amount</th><th>Category</th><th>Description</th><th>Action</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

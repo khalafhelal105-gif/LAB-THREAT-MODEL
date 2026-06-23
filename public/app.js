@@ -25,6 +25,7 @@ async function login() {
   currentUser = { username: data.username, name: data.name };
 
   // --- Role/session state is kept entirely on the client. ---
+  localStorage.setItem("token", data.token);
   localStorage.setItem("role", data.role);
   localStorage.setItem("username", data.username);
   document.cookie = `role=${data.role}; path=/`;
@@ -37,6 +38,7 @@ async function login() {
 }
 
 function logout() {
+  localStorage.removeItem("token");
   localStorage.removeItem("role");
   localStorage.removeItem("username");
   document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -106,8 +108,11 @@ async function submitRequest() {
 async function decide(id, decision) {
   await fetch(`/api/requests/${id}/decision`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ decision, actingRole: localStorage.getItem("role") }),
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": localStorage.getItem("token") 
+    },
+    body: JSON.stringify({ decision }),
   });
   loadPendingRequests();
   loadMyRequests();

@@ -10,6 +10,8 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
+const SESSIONS = {};
+
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 // ---- In-memory "database" (fine for a lab prototype) ----
@@ -80,7 +82,9 @@ const server = http.createServer((req, res) => {
       if (!user || user.password !== password) {
         return send(res, 401, { error: "Invalid credentials" });
       }
-      return send(res, 200, { username, role: user.role, name: user.name });
+      const token = Math.random().toString(36).substring(2);
+      SESSIONS[token] = { username: username, role: user.role };
+      return send(res, 200, { username, role: user.role, name: user.name, token });
     });
   }
 
@@ -112,9 +116,10 @@ const server = http.createServer((req, res) => {
   const decisionMatch = pathname.match(/^\/api\/requests\/(\d+)\/decision$/);
   if (req.method === "POST" && decisionMatch) {
     return readBody(req, body => {
-      const { decision, actingRole } = body;
+      const token = req.headers['authorization'];
+      const session = SESSIONS[token];
 
-      if (actingRole !== "manager") {
+      if (!session || session.role !== "manager") {
         return send(res, 403, { error: "Only managers can approve or reject requests" });
       }
 
@@ -122,6 +127,7 @@ const server = http.createServer((req, res) => {
       const reqItem = REQUESTS.find(r => r.id === id);
       if (!reqItem) return send(res, 404, { error: "Request not found" });
 
+      const { decision } = body;
       if (decision !== "approved" && decision !== "rejected") {
         return send(res, 400, { error: "Invalid decision" });
       }
